@@ -1,4 +1,6 @@
 import nltk
+import math
+import numpy as np
 from nltk.corpus import stopwords
 
 nltk.download('stopwords')
@@ -67,9 +69,37 @@ class Tukey_utils:
         return tokens
     
     def bag_of_words(self, vocab: list, sentence_tokens: list):
+        """
+            Recibe una oración y devuelve bow de esa oración
+        """
         vector = [0] * len(vocab)
         for word in sentence_tokens:
             if word in vocab:
                 idx = vocab.index(word)
                 vector[idx] += 1
         return vector
+    
+    def tf_idf(self, tokens: list, vocab: list):
+
+        no_docs = len(tokens)
+
+        # IDF
+        idf = dict()
+        for word in vocab:
+            n_t = sum(1 for document in tokens if word in document)
+            idf[word] = math.log(no_docs/(1+n_t))
+
+        print(idf)
+
+        # TF-IDF
+        tf_idf_matrix = []
+        for doc in tokens:
+            doc_len = len(doc)
+            tf_idf_vector = []
+            for word in vocab:
+                tf = doc.count(word) / doc_len
+                tf_idf_val = tf * idf[word]
+                tf_idf_vector.append(tf_idf_val) # el vector tf idf para un documento
+            tf_idf_matrix.append(tf_idf_vector)
+        
+        return np.array(tf_idf_matrix)

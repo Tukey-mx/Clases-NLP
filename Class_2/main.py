@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_csv('spotify_app_reviews.csv')
+df = pd.read_csv('Class 2/spotify_app_reviews.csv')
 
 tukey = Tukey_utils()
 
@@ -13,12 +13,11 @@ vocabulary = tukey.get_vocabulary(df['cleaned_reviews'])
 
 print(f'Vocabulario\n{vocabulary}')
 bow_vectors = [tukey.bag_of_words(vocabulary, sentence) for sentence in df['cleaned_reviews']]
-print("Bag of Words Vectors:")
-for vector in bow_vectors:
-    print(vector)
-
+#print("Bag of Words Vectors:")
 
 word_freq = np.sum(bow_vectors, axis=0)
+print(f'word rfeq')
+print(word_freq)
 
 sorted_idx = np.argsort(word_freq)[::-1]
 top_words = np.array(vocabulary)[sorted_idx][:10]
